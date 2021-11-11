@@ -42,25 +42,24 @@ public class Handler implements RequestHandler<Map<String, Object>, ApiGatewayRe
             + DateTimeFormat.forPattern("yyMMdd-hhmmss").print(new DateTime());
 
     private final static String SQS_QUEUE_URL =
-//			"https://sqs.us-east-1.amazonaws.com/580194257565/serverless-poc";//AARP
-            "https://sqs.us-east-2.amazonaws.com/121279407446/lambda_Sqs_Large_Objects"; //Personal Account
+         "https://sqs.us-east-2.amazonaws.com/121279407446/lambda_Sqs_Large_Objects"; //Personal Account
 
     @Override
     public ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
 
         String json = null;
-		int stringLength = 240;
-		char[] chars = new char[stringLength];
-		Arrays.fill(chars, 'x');
-		json = new String(chars);
+//		int stringLength = 240;
+//		char[] chars = new char[stringLength];
+//		Arrays.fill(chars, 'x');
+//		json = new String(chars);
 
 
-//        String file = "src/main/resources/myJsonFile.json";
-//        try {
-//            json = new String(Files.readAllBytes(Paths.get(file)));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        String file = "src/main/resources/myJsonFile.json";
+        try {
+            json = new String(Files.readAllBytes(Paths.get(file)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         List<Message> messages = null;
 
         Integer objectSize = getObjectSize(Collections.singletonList(json));
@@ -133,12 +132,12 @@ public class Handler implements RequestHandler<Map<String, Object>, ApiGatewayRe
 
         if (messages != null && messages.size() > 0) {
             //		 Delete the message, the queue, and the bucket.
-//            final String messageReceiptHandle = messages.get(0).getReceiptHandle();
-//            sqsExtended.deleteMessage(new DeleteMessageRequest(SQS_QUEUE_URL,
-//                    messageReceiptHandle));
-//            System.out.println("Deleted the message.");
-//            deleteBucketAndAllContents(s3);
-//            System.out.println("Deleted the bucket.");
+            final String messageReceiptHandle = messages.get(0).getReceiptHandle();
+            sqsExtended.deleteMessage(new DeleteMessageRequest(SQS_QUEUE_URL,
+                    messageReceiptHandle));
+            System.out.println("Deleted the message.");
+            deleteBucketAndAllContents(s3);
+            System.out.println("Deleted the bucket.");
         }
         return messages;
     }
