@@ -24,7 +24,7 @@ provider:
   name: aws
   runtime: java8
   lambdaHashingVersion: 20201221
-  region: us-east-1
+  region: us-east-2
   stage: dev
   iamRoleStatements:
     - Effect: Allow
@@ -32,8 +32,8 @@ provider:
         - sqs:DeleteMessage
         - sqs:ReceiveMessage
         - sqs:SendMessage
-      Resource: "arn:aws:sqs:us-east-1:*:*"
-    - Effect: Allow
+      Resource: "arn:aws:sqs:us-east-2:*:*"
+
 # you can overwrite defaults here
 #  stage: dev
 #  region: us-east-1
@@ -63,12 +63,18 @@ package:
   artifact: target/hello-dev.jar
 
 functions:
-  hello:
-    handler: com.serverless.Handler
+  producer:
+    handler: com.serverless.Producer
     events:
       - httpApi:
-          path: /publish/create
+          path: /publish
           method: get
+  consumer:
+    handler: com.serverless.Consumer
+    events:
+      - sqs: arn:aws:sqs:us-east-2:121279407446:lambda_Sqs_Large_Objects
+        batchSize: 10
+        maximumBatchingWindow: 60
 #      - websocket: $connect
 #      - s3: ${env:BUCKET}
 #      - schedule: rate(10 minutes)

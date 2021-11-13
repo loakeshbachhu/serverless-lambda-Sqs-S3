@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -32,17 +31,17 @@ import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.JSONObject;
 
-public class Handler implements RequestHandler<Map<String, Object>, ApiGatewayResponse> {
+public class Producer implements RequestHandler<Map<String, Object>, ApiGatewayResponse> {
 
-    private static final Logger LOG = LogManager.getLogger(Handler.class);
+    private static final Logger LOG = LogManager.getLogger(Producer.class);
 
     private final static String S3_BUCKET_NAME = UUID.randomUUID() + "-"
             + DateTimeFormat.forPattern("yyMMdd-hhmmss").print(new DateTime());
 
     private final static String SQS_QUEUE_URL =
-         "https://sqs.us-east-2.amazonaws.com/121279407446/lambda_Sqs_Large_Objects"; //Personal Account
+//			"https://sqs.us-east-1.amazonaws.com/580194257565/serverless-poc";//AARP
+            "https://sqs.us-east-2.amazonaws.com/121279407446/lambda_Sqs_Large_Objects"; //Personal Account
 
     @Override
     public ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
